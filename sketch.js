@@ -64,8 +64,6 @@ function vidLoad() {
 	video.loop();
 	video.volume(0);
 	isPlaying = true;
-	video.play();
-	cancel = setInterval(incrementSeconds, 1000);
 }
 
 function gotPoses(posesLocal) {
@@ -109,7 +107,18 @@ function updateReps(currentBestmatch) {
 			let last = scoreHistory[length - 1];
 			let secondLast = scoreHistory[length - 2];
 			let thirdLast = scoreHistory[length - 3];
-			if (last == 0 && secondLast == 1 && thirdLast == 0) reps++;
+			if (last == 0 && secondLast == 1 && thirdLast == 0) {
+				reps++;
+				if ((reps / challengeSquats) * 100 < 50)
+					userCounter.className = `progress-circle p${Math.floor(
+						(reps / challengeSquats) * 100
+					)}`;
+				else
+					userCounter.className = `progress-circle over50 p${Math.floor(
+						(reps / challengeSquats) * 100
+					)}`;
+				userCount.innerText = reps;
+			}
 		}
 	}
 	console.log(scoreHistory);
@@ -153,7 +162,7 @@ function getDistance(A, B) {
 
 function modelReady() {
 	console.log('model ready');
-	document.getElementById('status').innerText = 'Ready!';
+	// document.getElementById('status').innerText = 'Ready!';
 }
 
 function draw() {
@@ -162,8 +171,8 @@ function draw() {
 	fill(0, 255, 0);
 	ellipse(ref.x, ref.y, 10);
 	textSize(10);
-	text('' + similarityScoreStanding, 10, 10);
-	text('' + similarityScoreSitting, 10, 40);
+	// text('' + similarityScoreStanding, 10, 10);
+	// text('' + similarityScoreSitting, 10, 40);
 	textSize(20);
 	text('' + reps, 10, 80);
 	//fill(0,0,255);
