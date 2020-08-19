@@ -32,6 +32,7 @@ start.addEventListener('click', () => {
 		if (count == 0) {
 			document.getElementById('base-timer-label').innerHTML = 'Go!';
 			video.play();
+			challengeVideo.style.opacity = 1;
 			challengeVideo.play();
 			cancel = setInterval(incrementSeconds, 1000); //starting the challenge time
 			startTimer();

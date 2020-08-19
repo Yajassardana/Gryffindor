@@ -55,7 +55,7 @@ let lastTimeStamp = Date.now();
 function setup() {
 	createCanvas(352, 640);
 	// video = createCapture(VIDEO);
-	video = createVideo('testVideo.mp4', vidLoad);
+	video = createVideo('assets/testVideo.mp4', vidLoad);
 	video.hide();
 	poseNet = ml5.poseNet(video, modelReady);
 	poseNet.on('pose', gotPoses);
@@ -121,7 +121,7 @@ function updateReps(currentBestmatch) {
 			}
 		}
 	}
-	console.log(scoreHistory);
+	// console.log(scoreHistory);
 }
 
 function getSimilarityScore(userVector, refVector) {
@@ -174,7 +174,7 @@ function draw() {
 	// text('' + similarityScoreStanding, 10, 10);
 	// text('' + similarityScoreSitting, 10, 40);
 	textSize(20);
-	text('' + reps, 10, 80);
+	// text('' + reps, 10, 80);
 	//fill(0,0,255);
 	//ellipse(eyelX, eyelY, 50);
 	fill(255, 0, 0);
