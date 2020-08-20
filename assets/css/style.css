@@ -7,14 +7,17 @@ body {
 	color: #444;
 	font-family: 'Lato', Tahoma, Geneva, sans-serif;
 }
-
+.flex-container {
+	display: flex;
+	justify-content: space-between;
+}
 canvas {
 	display: block;
-	float: right;
+	/* float: right; */
 }
 
 video {
-	float: left;
+	/* float: left; */
 }
 
 h3 {
@@ -22,11 +25,11 @@ h3 {
 }
 
 .container {
-	width: 27rem;
+	width: 60%;
 	text-align: center;
-	margin: 1rem;
+	/* margin: 1rem; */
 	padding: 2rem;
-	float: left;
+	/* float: left; */
 }
 
 #start {

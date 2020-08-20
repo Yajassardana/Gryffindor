@@ -53,10 +53,11 @@ let scoreHistory = [];
 let lastTimeStamp = Date.now();
 
 function setup() {
-	createCanvas(352, 640);
-	// video = createCapture(VIDEO);
-	video = createVideo('assets/testVideo.mp4', vidLoad);
+	createCanvas(533, 400);
+	video = createCapture(VIDEO);
+	// video = createVideo('assets/testVideo.mp4', vidLoad);
 	video.hide();
+	// video.pause();
 	poseNet = ml5.poseNet(video, modelReady);
 	poseNet.on('pose', gotPoses);
 }
@@ -166,6 +167,12 @@ function modelReady() {
 }
 
 function draw() {
+	if (count <= 0) {
+		// timer is about so start
+
+		translate(video.width, 0);
+	}
+	scale(-1, 1);
 	image(video, 0, 0);
 
 	fill(0, 255, 0);

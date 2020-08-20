@@ -25,9 +25,9 @@ let challengeVideo = document.getElementById('challengeVideo');
 let userCounter = document.getElementById('userCounter'); //progress and rep count of current user
 let userCount = document.getElementById('userCount');
 let result = document.getElementById('result'); //result of the challenge
+let count = 3;
 
 start.addEventListener('click', () => {
-	let count = 3;
 	document.getElementById('base-timer-label').innerHTML = count;
 	count -= 1;
 	let countDown = setInterval(() => {
