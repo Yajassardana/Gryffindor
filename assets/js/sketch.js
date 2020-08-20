@@ -1,3 +1,27 @@
+//firebase setup
+// const firebase = require('firebase');
+// // const firebaseConfig = {
+// // 	apiKey: 'AIzaSyBiVNI771U_hB6paK4WYvQujoipNzF7PY8',
+// // 	authDomain: 'cult-155917.firebaseapp.com',
+// // 	databaseURL: 'https://cult-155917.firebaseio.com',
+// // 	projectId: 'cult-155917',
+// // 	storageBucket: 'cult-155917.appspot.com',
+// // 	messagingSenderId: '710378156821',
+// // 	appId: '1:710378156821:web:b0657b364c60d271',
+// // };
+// // Required for side-effects
+// require('firebase/firestore');
+firebase.initializeApp({
+	apiKey: 'AIzaSyBiVNI771U_hB6paK4WYvQujoipNzF7PY8',
+	authDomain: 'cult-155917.firebaseapp.com',
+	projectId: 'cult-155917',
+});
+
+let db = firebase.firestore();
+let challenges = db.collection('challenges');
+
+let CHALLENGE_ID = 'curefit-gryffindor'; //arbitrary right now
+
 let video;
 let poseNet;
 let noseX0 = 0;
@@ -10,47 +34,72 @@ let similarityScoreSitting = 0;
 let isPlaying = false;
 let poses = [];
 let standingVector = [
-	278.3973312259845,
-	281.0986954277556,
-	282.1958909000214,
-	274.04133166522325,
-	273.2643188938574,
-	241.61304279447182,
-	243.0825231581508,
-	205.6761252520117,
-	205.21494800328878,
-	192.29413317081108,
-	192.12446337738243,
-	145.35496005600908,
-	150.64426340657096,
-	73.83240613263285,
-	77.65162167643507,
-	14.15572022851707,
-	33.30284386074422,
+	0.9999904138864386,
+	1.0096935898985475,
+	1.0136346655891575,
+	0.9843438637400261,
+	0.9815528695900052,
+	0.8678629410720972,
+	0.8731412469761164,
+	0.7387791855316513,
+	0.7371226580577902,
+	0.6907116852399824,
+	0.6901022391428967,
+	0.5221083335345154,
+	0.5411072679833727,
+	0.26520260823503183,
+	0.27892105487225244,
+	0.050846696223121664,
+	0.11962228398255827,
 ];
 let sittingVector = [
-	163.6483680970063,
-	160.78723571170406,
-	164.01457989447323,
-	161.10645614112482,
-	162.96736685034,
-	140.7431547763037,
-	138.218065643686,
-	107.51078061956174,
-	109.65758234631387,
-	108.01137645668257,
-	103.22585893713737,
-	74.9278012898156,
-	70.76861914506568,
-	72.90663213174054,
-	64.46683427137673,
-	36.852587578536834,
-	30.29555912607725,
+	0.5878174141415458,
+	0.5775403581598566,
+	0.5891328300807228,
+	0.5786869832655346,
+	0.5853712889739224,
+	0.505542941006838,
+	0.49647293693852734,
+	0.3861737809610695,
+	0.3938849940600355,
+	0.387971898192107,
+	0.3707825392856946,
+	0.26913721727663653,
+	0.2541976262394601,
+	0.2618772705881485,
+	0.23156190471040491,
+	0.13237280021026163,
+	0.10882025548159933,
 ];
 let weight = 0.7;
 let reps = 0;
 let scoreHistory = [];
 let lastTimeStamp = Date.now();
+let maxDist = 290;
+let isMaxComputed = false;
+
+function getAngle(A, B, C) {
+	let P1 = A.position;
+	let P2 = B.position;
+	let P3 = C.position;
+	return atan2(P3.y - P1.y, P3.x - P1.x) - atan2(P2.y - P1.y, P2.x - P1.x);
+}
+
+function detectStanding(pose) {
+	var isTopVisible = pose.keypoints[0].score > 0.7;
+	var isBottomVisible =
+		pose.keypoints[15].score > 0.7 && pose.keypoints[16].score > 0.7;
+
+	rightAngle =
+		getAngle(pose.keypoints[12], pose.keypoints[14], pose.keypoints[16]) * 57;
+	leftAngle =
+		getAngle(pose.keypoints[11], pose.keypoints[13], pose.keypoints[15]) * 57;
+	var isLeft = Math.abs(leftAngle) < 15;
+	var isRight = Math.abs(rightAngle) < 15;
+	var isStanding = isTopVisible && isBottomVisible && isLeft && isRight;
+	// console.log( isStanding)
+	return isStanding;
+}
 
 function setup() {
 	createCanvas(533, 400);
@@ -72,9 +121,15 @@ function gotPoses(posesLocal) {
 	// 	return
 	// console.log(poses.length);
 	poses = posesLocal;
-	if (posesLocal.length > 0) {
+	if (posesLocal.length > 0 && poses[0].pose.score > 0.7) {
 		ref = getRef(poses[0].pose);
-		let userVector = getVector(poses[0].pose, ref);
+		if (!isMaxComputed && detectStanding(poses[0].pose)) {
+			maxDist = getDistance(ref, poses[0].pose.keypoints[0].position);
+			console.log(poses[0].pose.score, maxDist);
+			isMaxComputed = true;
+		}
+		let userVector = getVector(poses[0].pose, ref, maxDist);
+		console.log(userVector);
 		let similarityScoreSittingcurrent = getSimilarityScore(
 			userVector,
 			sittingVector
@@ -103,12 +158,11 @@ function updateReps(currentBestmatch) {
 		scoreHistory[scoreHistory.length - 1] != currentBestmatch
 	) {
 		scoreHistory.push(currentBestmatch);
-		if (scoreHistory.length > 3) {
+		if (scoreHistory.length > 2) {
 			let length = scoreHistory.length;
 			let last = scoreHistory[length - 1];
 			let secondLast = scoreHistory[length - 2];
-			let thirdLast = scoreHistory[length - 3];
-			if (last == 0 && secondLast == 1 && thirdLast == 0) {
+			if (last == 1 && secondLast == 0) {
 				reps++;
 				if ((reps / challengeSquats) * 100 < 50)
 					userCounter.className = `progress-circle p${Math.floor(
@@ -147,10 +201,10 @@ function getRef(pose) {
 	return ref;
 }
 
-function getVector(pose, ref) {
+function getVector(pose, ref, maxDist) {
 	let resultVector = [];
 	for (i = 0; i < pose.keypoints.length; i++) {
-		resultVector.push(getDistance(ref, pose.keypoints[i].position));
+		resultVector.push(getDistance(ref, pose.keypoints[i].position) / maxDist);
 	}
 
 	// console.log(resultVector)
@@ -163,25 +217,23 @@ function getDistance(A, B) {
 
 function modelReady() {
 	console.log('model ready');
-	// document.getElementById('status').innerText = 'Ready!';
 }
 
 function draw() {
 	if (count <= 0) {
 		// timer is about so start
-
 		translate(video.width, 0);
 	}
 	scale(-1, 1);
 	image(video, 0, 0);
-
 	fill(0, 255, 0);
 	ellipse(ref.x, ref.y, 10);
 	textSize(10);
-	// text('' + similarityScoreStanding, 10, 10);
-	// text('' + similarityScoreSitting, 10, 40);
-	textSize(20);
-	// text('' + reps, 10, 80);
+	text('' + similarityScoreStanding, 10, 10);
+	text('' + similarityScoreSitting, 10, 40);
+	textSize(100);
+	fill(0, 0, 0);
+	text('' + reps, 10, 80);
 	//fill(0,0,255);
 	//ellipse(eyelX, eyelY, 50);
 	fill(255, 0, 0);
