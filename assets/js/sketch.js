@@ -21,6 +21,7 @@ let db = firebase.firestore();
 let challenges = db.collection('challenges');
 
 let CHALLENGE_ID = 'curefit-gryffindor'; //arbitrary right now
+let userMeta = {};
 
 let video;
 let poseNet;
@@ -125,11 +126,11 @@ function gotPoses(posesLocal) {
 		ref = getRef(poses[0].pose);
 		if (!isMaxComputed && detectStanding(poses[0].pose)) {
 			maxDist = getDistance(ref, poses[0].pose.keypoints[0].position);
-			console.log(poses[0].pose.score, maxDist);
+			// console.log(poses[0].pose.score, maxDist);
 			isMaxComputed = true;
 		}
 		let userVector = getVector(poses[0].pose, ref, maxDist);
-		console.log(userVector);
+		// console.log(userVector);
 		let similarityScoreSittingcurrent = getSimilarityScore(
 			userVector,
 			sittingVector
@@ -163,7 +164,9 @@ function updateReps(currentBestmatch) {
 			let last = scoreHistory[length - 1];
 			let secondLast = scoreHistory[length - 2];
 			if (last == 1 && secondLast == 0) {
+				userMeta[reps] = seconds;
 				reps++;
+				console.log(userMeta);
 				if ((reps / challengeSquats) * 100 < 50)
 					userCounter.className = `progress-circle p${Math.floor(
 						(reps / challengeSquats) * 100
@@ -173,6 +176,7 @@ function updateReps(currentBestmatch) {
 						(reps / challengeSquats) * 100
 					)}`;
 				userCount.innerText = reps;
+				// challenges.doc(CHALLENGE_ID).set({ data: userMeta }); //sending to firestore
 			}
 		}
 	}
