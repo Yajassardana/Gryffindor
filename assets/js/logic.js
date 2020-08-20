@@ -10,7 +10,9 @@ const meta = {
 	8: 48,
 	9: 54,
 }; // Challenge time stamps
-let challengeSquats = 10; //total number of squads to cross to tie the challenge
+let challengeSquats = Object.keys(meta).length; //total number of squads to cross to tie the challenge
+document.getElementById('target').innerText = challengeSquats + 1 + ' Reps';
+
 let challengeTime = 60; //challenge duration in secs
 let squatCount = 0; //current squad count of the challenge video
 var seconds = 0;
