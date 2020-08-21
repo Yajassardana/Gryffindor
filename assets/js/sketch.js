@@ -263,8 +263,8 @@ function detectStanding(pose) {
 
 function setup() {
 	createCanvas(133, 100);
-	// video = createCapture(VIDEO);
-	video = createVideo('assets/challenge_creator.mp4', vidLoad);
+	video = createCapture(VIDEO);
+	// video = createVideo('assets/challenge_creator.mp4', vidLoad);
 	video.size(640, 480);
 	video.hide();
 	// console.log(video);
@@ -394,7 +394,7 @@ function modelReady() {
 }
 
 function draw() {
-	if (count <= 0) {
+	if (count <= 4) {
 		// timer is about so start
 		translate(133, 0);
 	}

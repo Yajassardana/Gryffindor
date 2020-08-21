@@ -1,14 +1,14 @@
 const meta = {
-	0: 3,
-	1: 7,
-	2: 12,
-	3: 18,
-	4: 22,
-	5: 29,
-	6: 36,
-	7: 42,
-	8: 48,
-	9: 54,
+	0: 2,
+	1: 4,
+	2: 6,
+	3: 8,
+	4: 11,
+	5: 13,
+	6: 15,
+	7: 18,
+	8: 23,
+	9: 27,
 }; // Challenge time stamps
 let challengeSquats = Object.keys(meta).length; //total number of squads to cross to tie the challenge
 document.getElementById('target').innerText = challengeSquats + 1 + ' Reps';
@@ -25,10 +25,14 @@ let challengeVideo = document.getElementById('challengeVideo');
 let userCounter = document.getElementById('userCounter'); //progress and rep count of current user
 let userCount = document.getElementById('userCount');
 let result = document.getElementById('result'); //result of the challenge
-let count = 3;
+let count = 5;
 
 start.addEventListener('click', () => {
 	document.getElementById('base-timer-label').innerHTML = count;
+	document.getElementById('c').style.opacity = 1;
+	document.getElementById('userCounter').style.opacity = 1;
+	document.getElementById('challengeCounter').style.opacity = 1;
+	document.getElementById('result').style.opacity = 1;
 	count -= 1;
 	let countDown = setInterval(() => {
 		if (count == 0) {

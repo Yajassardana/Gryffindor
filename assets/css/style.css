@@ -11,7 +11,16 @@ body {
 .flex-container {
 	display: flex;
 	justify-content: space-between;
+	padding-top: 6rem;
 }
+#c,
+#userCounter,
+#challengeCounter,
+#result {
+	opacity: 0;
+	transition: opacity 2s;
+}
+
 canvas {
 	display: block;
 	/* float: right; */
