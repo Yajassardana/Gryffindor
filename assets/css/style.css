@@ -1,0 +1,125 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:700);
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background: #ecf0f1;
+	color: white;
+	font-family: 'Lato', Tahoma, Geneva, sans-serif;
+	background: url('../faceoff_bg.jpg');
+}
+.flex-container {
+	display: flex;
+	justify-content: space-between;
+}
+canvas {
+	display: block;
+	/* float: right; */
+}
+
+video {
+	/* float: left; */
+}
+
+h3 {
+	display: inline;
+}
+
+.container {
+	width: 60%;
+	text-align: center;
+	/* margin: 1rem; */
+	padding: 2rem;
+	/* float: left; */
+}
+
+#start {
+	display: block;
+	margin: auto;
+	margin-top: 0.2rem;
+}
+
+#challengeCounter {
+	float: left;
+}
+
+#countDown {
+	display: inline;
+}
+
+#userCounter {
+	float: right;
+}
+.fa-play {
+	cursor: pointer;
+	transition: transform 1s;
+}
+.fa-play:hover {
+	color: black;
+}
+
+.fa-play:active {
+	color: black;
+	/* box-shadow: 0 5px #666; */
+	transform: translateY(4px);
+}
+.clr {
+	clear: both;
+}
+
+/* *clock */
+
+.base-timer {
+	position: relative;
+	width: 150px;
+	height: 150px;
+	margin: auto;
+	margin-top: 2rem;
+}
+
+.base-timer__svg {
+	transform: scaleX(-1);
+}
+
+.base-timer__circle {
+	fill: none;
+	stroke: none;
+}
+
+.base-timer__path-elapsed {
+	stroke-width: 7px;
+	stroke: grey;
+}
+
+.base-timer__path-remaining {
+	stroke-width: 7px;
+	stroke-linecap: round;
+	transform: rotate(90deg);
+	transform-origin: center;
+	transition: 1s linear all;
+	fill-rule: nonzero;
+	stroke: currentColor;
+}
+
+.base-timer__path-remaining.green {
+	color: rgb(65, 184, 131);
+}
+
+.base-timer__path-remaining.orange {
+	color: orange;
+}
+
+.base-timer__path-remaining.red {
+	color: red;
+}
+
+.base-timer__label {
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 48px;
+}

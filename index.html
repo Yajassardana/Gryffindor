@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="./assets/js/p5.min.js"></script>
+		<script src="./assets/js/p5.dom.min.js"></script>
+		<script src="./assets/js/p5.sound.min.js"></script>
+		<script src="./assets/js/ml5.min.js"></script>
+		<!-- The main Three.js file -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
+		<!-- This brings in the ability to load custom 3D objects in the .gltf file format. Blender allows the ability to export to this format out the box -->
+		<script src="https://cdn.jsdelivr.net/gh/mrdoob/Three.js@r92/examples/js/loaders/GLTFLoader.js"></script>
+		<script
+			src="https://kit.fontawesome.com/9d05a65a82.js"
+			crossorigin="anonymous"
+		></script>
+		<link href="./assets/css/css-circular-prog-bar.css" rel="stylesheet" />
+
+		<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+		<meta charset="utf-8" />
+	</head>
+	<body class="flex-container">
+		<video
+			id="challengeVideo"
+			width="450"
+			height="300"
+			style="opacity: 0;"
+			muted
+			loop
+		>
+			<source
+				src="http://d3v5dnv3tv89ik.cloudfront.net/challenge_creator.mp4"
+				type="video/mp4"
+			/>
+		</video>
+		<div class="container">
+			<div id="challengeCounter" class="progress-circle">
+				<span id="challengeCount">0</span>
+				<div class="left-half-clipper">
+					<div class="over50">
+						<div class="first50-bar"></div>
+						<div class="value-bar"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="userCounter" class="progress-circle">
+				<span id="userCount">0</span>
+				<div class="left-half-clipper">
+					<div class="over50">
+						<div class="first50-bar"></div>
+						<div class="value-bar"></div>
+					</div>
+				</div>
+			</div>
+			<div class="clr"></div>
+			<div id="app"></div>
+			<div>
+				<h1 id="result">Target: <span id="target"></span></h1>
+			</div>
+		</div>
+		<div class="canvasTest">
+			<canvas id="c"></canvas>
+		</div>
+
+		<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+		<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js"></script>
+		<!-- <script src="https://www.gstatic.com/firebase/init.js"></script> -->
+		<script src="./assets/js/clock.js"></script>
+
+		<script src="./assets/js/logic.js"></script>
+		<script src="./assets/js/sketch.js"></script>
+	</body>
+</html>
